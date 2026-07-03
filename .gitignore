@@ -1,0 +1,30 @@
+# Environment variables & API keys
+.env
+.env.local
+.env.*.local
+*.key
+*_apikey*
+*_api_key*
+*credentials*
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+.Python
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# IDE & OS
+.DS_Store
+.vscode/
+.idea/
+.streamlit/

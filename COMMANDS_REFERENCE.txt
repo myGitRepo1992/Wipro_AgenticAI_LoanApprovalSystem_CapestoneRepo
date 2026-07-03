@@ -1,0 +1,265 @@
+================================================================================
+🚀 COMMANDS REFERENCE - Quick Copy-Paste Guide
+================================================================================
+
+SETUP (One-Time)
+================================================================================
+pip install -r requirements.txt
+python init_database.py
+
+RUNNING THE SYSTEM
+================================================================================
+
+Full Mode (Everything):
+  python main.py --mode full
+  → Opens http://localhost:8501
+
+Demo Mode (Quick Test):
+  python main.py --mode demo
+  → Tests agents, shows decision in terminal
+
+API-Only Mode (Backend):
+  python main.py --mode api-only
+  → Starts API at http://localhost:8000/docs
+
+DATABASE TOOLS
+================================================================================
+
+Interactive CLI:
+  python database_cli.py
+
+View All Applications:
+  python database_cli.py all
+  python database_cli.py all 100     # Show 100 records
+
+Search by ID:
+  python database_cli.py search APP-ABC123
+
+Search by Name:
+  python database_cli.py name "John Doe"
+
+Filter by Status:
+  python database_cli.py status approved
+  python database_cli.py status rejected
+  python database_cli.py status review
+
+View Statistics:
+  python database_cli.py stats
+
+Query Database:
+  python query_database.py
+  python query_database.py APP-ABC123    # Show details
+  python query_database.py stats          # Show statistics
+
+REST API CALLS
+================================================================================
+
+Submit Application:
+  curl -X POST http://localhost:8000/submit_application \
+    -H "Content-Type: application/json" \
+    -d '{...}'
+
+Search Applications:
+  curl "http://localhost:8000/search_applications?search_query=John&status_filter=approved"
+
+Get Application Details:
+  curl http://localhost:8000/application_details/APP-ABC123
+
+Get All Applications:
+  curl "http://localhost:8000/applications/all?limit=50"
+
+Get Statistics:
+  curl http://localhost:8000/database_stats
+
+Check API Health:
+  curl http://localhost:8000/health
+
+API Documentation:
+  http://localhost:8000/docs
+
+WEB UI NAVIGATION
+================================================================================
+
+Main URL:
+  http://localhost:8501
+
+Tabs:
+  1. 📝 New Application      - Submit loan applications
+  2. 📊 Application Status   - Lookup by ID
+  3. 📈 Analytics            - View summary statistics
+  4. 🗄️ Database Viewer      - Search & filter records
+
+Database Viewer Features:
+  - Search by Application ID / Name / Applicant ID
+  - Filter by Status (All, Approved, Rejected, Review)
+  - View statistics dashboard
+  - Click on application to see 4-tab detailed view:
+    • 📋 Basic Info
+    • 💰 Financial
+    • 📊 Analysis
+    • ✅ Decision
+
+PYTHON SCRIPTS
+================================================================================
+
+Initialize Database:
+  python init_database.py
+
+Start Services Individually:
+  python microservice.py           # API server
+  streamlit run chatbot_ui.py      # Web UI
+  python init_database.py          # Initialize DB
+
+Query Database from Python:
+  python -c "
+  from database import SessionLocal, ApplicationRecord
+  db = SessionLocal()
+  apps = db.query(ApplicationRecord).all()
+  print(f'Total: {len(apps)}')
+  db.close()
+  "
+
+MCP SERVERS (Ports 8001-8004)
+================================================================================
+
+Check Individual Server Health:
+  curl http://localhost:8001/health     # ApplicantDB
+  curl http://localhost:8002/health     # RiskRulesDB
+  curl http://localhost:8003/health     # DecisionSynthesis
+  curl http://localhost:8004/health     # NotificationSystem
+
+TROUBLESHOOTING
+================================================================================
+
+Check if Service Running:
+  curl http://localhost:8000/health
+  curl http://localhost:8501/health
+
+Kill Process on Port:
+  lsof -i :8000                         # Find process
+  kill -9 <PID>                         # Kill process
+
+Reinitialize Database:
+  python init_database.py
+
+Clear Database & Start Fresh:
+  rm loan_applications.db
+  python init_database.py
+
+Check Virtual Environment:
+  source .venv/bin/activate
+  python --version
+
+Verify Dependencies:
+  python -c "import sqlalchemy, streamlit, fastapi, langgraph; print('✅ All OK')"
+
+EXPORT DATA
+================================================================================
+
+Export All to Text:
+  python database_cli.py all 1000 > applications.txt
+
+Export Statistics:
+  python database_cli.py stats > stats.txt
+
+Export Approved Only:
+  python database_cli.py status approved > approved.txt
+
+Export as Python Data:
+  python -c "
+  from database import SessionLocal, ApplicationRecord
+  db = SessionLocal()
+  apps = db.query(ApplicationRecord).filter(
+    ApplicationRecord.status == 'approved'
+  ).all()
+  for app in apps:
+    print(f'{app.id}: {app.applicant_name} - {app.loan_amount}')
+  "
+
+EXAMPLE WORKFLOW
+================================================================================
+
+1. Start Full System:
+   python main.py --mode full
+
+2. Open http://localhost:8501
+
+3. Submit Application:
+   - Fill out form in "📝 New Application" tab
+   - Click "🚀 Submit Application"
+   - Note the Application ID (e.g., APP-XYZ789)
+
+4. Search in Database:
+   - Go to "🗄️ Database Viewer" tab
+   - Paste Application ID in search box
+   - Click "🔍 Search Database"
+
+5. View Results:
+   - Click on application in results
+   - View all 4 tabs of information
+
+6. Export Data:
+   - Use CLI: python database_cli.py all
+   - Or API: curl http://localhost:8000/database_stats
+
+QUICK START (Copy-Paste)
+================================================================================
+
+# Setup (first time)
+pip install -r requirements.txt
+python init_database.py
+
+# Run full system
+python main.py --mode full
+
+# (Open http://localhost:8501 in browser)
+
+# Or quick test
+python main.py --mode demo
+
+# Or API only
+python main.py --mode api-only
+
+PORTS USED
+================================================================================
+
+8001 - ApplicantDB MCP Server
+8002 - RiskRulesDB MCP Server
+8003 - DecisionSynthesis MCP Server
+8004 - NotificationSystem MCP Server
+8000 - FastAPI Microservice
+8501 - Streamlit Web UI
+
+FILE LOCATIONS
+================================================================================
+
+Database:
+  loan_applications.db
+
+Configuration:
+  config.py
+
+Documentation:
+  COMPLETE_SETUP.md
+  DATABASE_GUIDE.md
+  QUICK_START_DATABASE.md
+  RUN_MODES.md
+  CLAUDE.md
+
+Main Entry Point:
+  main.py
+
+Core Modules:
+  orchestrator.py
+  microservice.py
+  chatbot_ui.py
+  database.py
+
+Tools:
+  database_cli.py
+  init_database.py
+  query_database.py
+
+================================================================================
+For more info: See COMPLETE_SETUP.md or DATABASE_GUIDE.md
+================================================================================
