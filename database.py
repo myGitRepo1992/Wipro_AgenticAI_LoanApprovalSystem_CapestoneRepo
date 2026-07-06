@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import Column, String, Float, Integer, DateTime, Text, JSON
 from datetime import datetime
@@ -8,8 +8,9 @@ DATABASE_URL = "sqlite:///./loan_applications.db"
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    echo=False
+    connect_args={"check_same_thread": False, "timeout": 30},
+    echo=False,
+    pool_pre_ping=True
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -92,8 +93,14 @@ class NotificationRecord(Base):
 
 
 def init_db():
-    """Create all database tables"""
+    """Create all database tables and enable WAL mode"""
     Base.metadata.create_all(bind=engine)
+
+    # Enable WAL mode for concurrent access support
+    with engine.connect() as conn:
+        conn.execute(text("PRAGMA journal_mode=WAL;"))
+        conn.execute(text("PRAGMA synchronous=NORMAL;"))
+        conn.commit()
 
 
 def get_db():
